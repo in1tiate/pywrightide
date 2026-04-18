@@ -9,7 +9,7 @@ from PyQt6.QtWidgets import (QDialog, QDialogButtonBox, QComboBox, QCheckBox,
 from PyQt6.QtGui import QPixmap, QIcon, QFileSystemModel
 from PyQt6.QtCore import QDir, QSize, Qt
 
-from data.PyWrightGame import PyWrightGameInfo
+from data.PyWrightGame import CurrentPyWrightGame
 
 accepted_types = (".png", ".jpg")
 ICON_SIZE = QSize(128, 128)
@@ -17,14 +17,14 @@ ICON_SIZE = QSize(128, 128)
 
 class IconPickerDialog(QDialog):
 
-    def __init__(self, pywright_root_dir: str, selected_game_info: PyWrightGameInfo | None = None, limit_to_folders: list[str] = [], parent=None):
+    def __init__(self, limit_to_folders: list[str] = [], parent=None):
         super().__init__(parent)
 
         self.setWindowTitle("Pick an Icon")
 
-        self._pywright_root_dir = pywright_root_dir
+        self._pywright_root_dir = CurrentPyWrightGame().current_pywright_folder_path
 
-        self._selected_game_info = selected_game_info
+        self._selected_game_info = CurrentPyWrightGame().current_game
 
         self._limit_to_folders = limit_to_folders
 

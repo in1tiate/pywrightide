@@ -6,10 +6,12 @@ from PyQt6.QtGui import QIcon, QKeySequence, QAction
 
 import gui.IDEMainWindow
 from gui import AboutDialog
-from data.PyWrightGame import PyWrightGameInfo
+from data.PyWrightGame import PyWrightGameInfo, CurrentPyWrightGame
 import data.IconThemes as IconThemes
 
 from pathlib import Path
+
+current_pywright_game = CurrentPyWrightGame()
 
 
 class MainWindowTopToolbar(QToolBar):
@@ -162,8 +164,8 @@ class MainWindowTopToolbar(QToolBar):
     def _handle_run_pywright(self):
         self.ide_main_window.logger_view.show()
         self.logger_toggle_action.setChecked(True)  # Since we open the logger, makes sense to set this checked also
-        self.ide_main_window.logger_view.run_and_log(self.ide_main_window.selected_pywright_installation,
-                                                     self.ide_main_window.pywright_executable_name)
+        self.ide_main_window.logger_view.run_and_log(current_pywright_game.current_pywright_folder_path,
+                                                     current_pywright_game.current_pywright_executable_name)
 
     def update_run_pywright_status_tip(self, executable_name: str):
         self.run_pywright_action.setStatusTip(
@@ -201,8 +203,8 @@ class MainWindowTopToolbar(QToolBar):
         for folder_path in self.ide_main_window.recent_folders:
             if PyWrightGameInfo.is_valid_game_folder(Path(folder_path)):
                 # Do not add the folder we've already opened
-                if (self.ide_main_window.selected_game_info is not None and
-                        str(self.ide_main_window.selected_game_info.game_path) == folder_path):
+                if (current_pywright_game.current_game is not None and
+                        str(current_pywright_game.current_pywright_folder_path) == folder_path):
                     continue
                 folder_action = QAction(folder_path, self.recent_folders_menu)
                 self.recent_folders_menu.addAction(folder_action)
