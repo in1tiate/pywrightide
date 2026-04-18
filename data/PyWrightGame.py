@@ -316,3 +316,32 @@ class PyWrightGameInfo:
         self.clear_case_list()
         self.builtin_macros.clear()
         self.game_macros.clear()
+
+
+class CurrentPyWrightGame:
+    _instance = None
+    _current_game_info : PyWrightGameInfo | None = None
+    _current_pywright_folder_path = Path()
+    _current_pywright_executable = ""
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
+
+    def set_current_game(self, new_game_info):
+        self._current_game_info = new_game_info
+        self._current_pywright_folder_path = self._current_game_info.pywright_folder_path
+        self._current_pywright_executable = PyWrightFolder.pick_pywright_executable(str(self._current_pywright_folder_path))
+
+    @property
+    def current_game(self):
+        return self._current_game_info
+
+    @property
+    def current_pywright_folder_path(self):
+        return self._current_pywright_folder_path
+
+    @property
+    def current_pywright_executable_name(self):
+        return self._current_pywright_executable
