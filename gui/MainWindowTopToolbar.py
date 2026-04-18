@@ -122,6 +122,11 @@ class MainWindowTopToolbar(QToolBar):
         ))
         self.logger_toggle_action.setStatusTip("Toggle Logger View ON or OFF")
 
+        character_viewer_icon_path = IconThemes.icon_path_from_theme(IconThemes.ICON_NAME_CHARACTER_VIEWER)
+        self.character_viewer_action = QAction("Character Viewer")
+        self.character_viewer_action.setIcon(QIcon(character_viewer_icon_path))
+        self.character_viewer_action.setStatusTip("Open Character Viewer tool")
+
         run_pywright_icon_path = IconThemes.icon_path_from_theme(IconThemes.ICON_NAME_RUN_PYWRIGHT)
         self.run_pywright_action = QAction(QIcon(run_pywright_icon_path), "Run PyWright")
         self.run_pywright_action.setEnabled(False)
@@ -155,6 +160,8 @@ class MainWindowTopToolbar(QToolBar):
         self.addAction(self.directory_view_toggle_action)
         self.addAction(self.asset_browser_toggle_action)
         self.addAction(self.logger_toggle_action)
+        self.addSeparator()
+        self.addAction(self.character_viewer_action)
         self.addSeparator()
         self.addAction(self.run_pywright_action)
         self.addSeparator()
@@ -236,6 +243,9 @@ class MainWindowTopToolbar(QToolBar):
 
         logger_toggle_icon_path = IconThemes.icon_path_from_theme(IconThemes.ICON_NAME_LOGGER_TOGGLE)
         self.logger_toggle_action.setIcon(QIcon(logger_toggle_icon_path))
+
+        character_viewer_icon_path = IconThemes.icon_path_from_theme(IconThemes.ICON_NAME_CHARACTER_VIEWER)
+        self.character_viewer_action.setIcon(QIcon(character_viewer_icon_path))
 
         run_pywright_icon_path = IconThemes.icon_path_from_theme(IconThemes.ICON_NAME_RUN_PYWRIGHT)
         self.run_pywright_action.setIcon(QIcon(run_pywright_icon_path))

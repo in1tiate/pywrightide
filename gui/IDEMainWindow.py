@@ -13,6 +13,7 @@ from .NewGameDialog import NewGameDialog
 from .OpenGameDialog import OpenGameDialog
 from .DirectoryViewWidget import DirectoryViewWidget
 from .PyWrightLoggerWidget import PyWrightLoggerWidget
+from .CharacterViewerDialog import CharacterViewerDialog
 from .SettingsDialog import SettingsDialog
 from .FindReplaceDialog import FindReplaceDialog
 from .AssetBrowserRootWidget import AssetBrowserRootWidget
@@ -65,6 +66,7 @@ class IDEMainWindow(QMainWindow):
         self._top_toolbar.new_file_action.triggered.connect(lambda: self.central_widget.open_new_editing_tab(""))
         self._top_toolbar.open_file_action.triggered.connect(self._handle_open_file)
         self._top_toolbar.save_file_action.triggered.connect(self.central_widget.handle_save_tab)
+        self._top_toolbar.character_viewer_action.triggered.connect(self._handle_character_viewer)
         self._top_toolbar.find_replace_dialog_action.triggered.connect(self._handle_find_replace)
         self._top_toolbar.settings_action.triggered.connect(self._handle_settings)
 
@@ -195,6 +197,12 @@ class IDEMainWindow(QMainWindow):
 
     def _handle_insert_into_cursor(self, command: str):
         self.central_widget.handle_insert_into_cursor(command)
+
+    def _handle_character_viewer(self):
+        char_viewer = CharacterViewerDialog(self)
+        char_viewer.command_insert_at_cursor_requested.connect(self._handle_insert_into_cursor)
+
+        char_viewer.show()
 
     def _handle_settings(self):
         settings_dialog = SettingsDialog(self)

@@ -9,6 +9,7 @@
 * Fixed path for macro detection, adding case-specific macros as well (by Zetrypio)
 * Lexer improvement:
   * Added some undocumented commands found in the engine source code (by Zetrypio)
+* Added a Character Viewer dialog.
 
 ## Version 1.5 - 30.11.2025
 
