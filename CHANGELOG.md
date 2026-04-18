@@ -10,6 +10,7 @@
 * Lexer improvement:
   * Added some undocumented commands found in the engine source code (by Zetrypio)
 * Added a Character Viewer dialog.
+* The IDE will now warn the user of missing case folders and remove them from the list instead of crashing.
 
 ## Version 1.5 - 30.11.2025
 

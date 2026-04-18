@@ -3,6 +3,8 @@
 
 from pathlib import Path
 
+from PyQt6.QtWidgets import QMessageBox
+
 from .PyWrightCase import PyWrightCase
 
 from . import PyWrightFolder
@@ -53,11 +55,19 @@ class PyWrightGameInfo:
         game_cases = PyWrightGameInfo._load_intro_txt(folder_path)
 
         game_info = PyWrightGameInfo(game_title, game_version, game_author, game_icon_path, game_cases, folder_path)
+        game_info.check_if_cases_exist()
         game_info.parse_builtin_macros()
         game_info.parse_game_macros()
         game_info.parse_case_macros()
 
         return game_info
+
+    def check_if_cases_exist(self):
+        for case in self.game_cases:
+            if not (self.game_path / case).exists() or not (self.game_path / case).is_dir():
+                QMessageBox.information(None, "Missing Case", "The case <b>{}</b> is missing! It will be deleted from the case list!".format(case), QMessageBox.StandardButton.Ok,
+                                         QMessageBox.StandardButton.Ok)
+                self.game_cases.remove(case)
 
     @staticmethod
     def create_new_game(pywright_folder_path: Path,
