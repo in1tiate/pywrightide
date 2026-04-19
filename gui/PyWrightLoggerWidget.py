@@ -38,11 +38,11 @@ class PyWrightLoggerWidget(QDockWidget):
         self._program_path = ""
         self._executable_name = ""
 
-    def run_and_log(self, pywright_path: str, executable_name: str):
+    def run_and_log(self, pywright_path: Path, executable_name: str):
         self.logger_text_edit.clear()
-        final_path = Path("{}/{}".format(pywright_path, executable_name))
+        final_path = pywright_path / executable_name
         self.pywright_process.setProgram(str(final_path))
-        self.pywright_process.setWorkingDirectory(pywright_path)
+        self.pywright_process.setWorkingDirectory(str(pywright_path))
         self._program_path = pywright_path
         self._executable_name = executable_name
         self.pywright_process.setArguments([])
