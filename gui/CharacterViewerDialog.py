@@ -185,21 +185,21 @@ class CharacterViewerDialog(QDialog):
             self._next_frame_timer.stop()
             return
 
-        current_framedelay = self._spritesheet.get_framedelay_for_frame(frame_num)
-
         self._next_frame_timer = QTimer()
+        self._next_frame_timer.setSingleShot(True)
         self._next_frame_timer.timeout.connect(self._handle_next_frame_timeout)
-        self._next_frame_timer.start(int(current_framedelay * GAME_TICK_RATE))
+        self._next_frame_timer.start(0)
 
     def _handle_next_frame_timeout(self):
         frame_num = self._frame_number_spinbox.value() - 1
-
+        
         if frame_num >= self._spritesheet.num_frames - 1:
             self._frame_number_spinbox.setValue(1)
             frame_num = 0
         else:
-            self._frame_number_spinbox.setValue(self._frame_number_spinbox.value() + 1)
-
+            frame_num += 1
+            self._frame_number_spinbox.setValue(frame_num + 1)
+            
         current_framedelay = self._spritesheet.get_framedelay_for_frame(frame_num)
         self._next_frame_timer.start(int(current_framedelay * GAME_TICK_RATE))
 
