@@ -32,6 +32,7 @@ class CharacterViewerDialog(QDialog):
 
         self._image_label = SpriteViewLabel()
         self._current_frame_pixmap = QPixmap()
+        self._image_label.resize(768,576)
         self._image_label.setPixmap(self._current_frame_pixmap)
 
         play_icon_path = IconThemes.icon_path_from_theme(IconThemes.ICON_NAME_AUDIO_PLAY)
@@ -146,7 +147,7 @@ class CharacterViewerDialog(QDialog):
             self._frame_slider.setValue(self._frame_number_spinbox.value())
 
         frame = self._spritesheet.get_frame(frame_num)
-        self._current_frame_pixmap = QPixmap.fromImage(frame).scaled(self._image_label.width(), self._image_label.height(), Qt.AspectRatioMode.KeepAspectRatio)
+        self._current_frame_pixmap = QPixmap.fromImage(frame)
         self._image_label.setPixmap(self._current_frame_pixmap)
 
     def _handle_slider_value_changed(self):
@@ -204,9 +205,28 @@ class CharacterViewerDialog(QDialog):
 
 
 class SpriteViewLabel(QLabel):
-    """A custom label that draws a checkerboard pattern as a background"""
+    """A custom label that draws a checkerboard pattern as a background and centers pixmaps"""
     def __init__(self, parent = None):
         super().__init__(parent)
+        
+    def scale_and_pad_pixmap(self, pixmap, target_width, target_height):
+        scaled = pixmap.scaledToHeight(target_height)
+
+        result = QPixmap(target_width, target_height)
+        result.fill(Qt.GlobalColor.transparent) # correctly sized canvas
+        
+        painter = QPainter(result)
+        # center pixmap
+        x_offset = (target_width - scaled.width()) // 2
+        painter.drawPixmap(x_offset, 0, scaled)
+        painter.end()
+
+        return result
+        
+    def setPixmap(self, new_pixmap):
+        if new_pixmap:
+            scaled_pixmap = self.scale_and_pad_pixmap(new_pixmap, self.width(), self.height())
+            super().setPixmap(scaled_pixmap)
 
     def paintEvent(self, event):
         painter = QPainter(self)
@@ -220,5 +240,4 @@ class SpriteViewLabel(QLabel):
                 painter.fillRect(x, y, 16, 16, color)
 
         if self.pixmap() and not self.pixmap().isNull():
-            # Pixmap will be already stretched to the whole size so we don't have to do much here.
             painter.drawPixmap(0, 0, self.pixmap())
