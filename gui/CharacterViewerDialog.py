@@ -184,8 +184,6 @@ class CharacterViewerDialog(QDialog):
             self._next_frame_timer.stop()
             return
 
-        current_framedelay = self._spritesheet.get_framedelay_for_frame(frame_num)
-
         self._next_frame_timer = QTimer()
         self._next_frame_timer.setSingleShot(True)
         self._next_frame_timer.timeout.connect(self._handle_next_frame_timeout)
