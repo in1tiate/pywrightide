@@ -7,6 +7,7 @@ This project is a simple IDE written in Python and PyQt, that aims to make devel
 * A recent Python version (3.10+)
 * PyQt6 and PyQt6-QScintilla
 * pygame (only for playing sounds)
+* Pillow (for .gif/.webp to .png conversion tools)
 
 > [!NOTE]
 > To easily install the dependencies, run this command below on the folder PyWright IDE is in:

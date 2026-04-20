@@ -2,9 +2,11 @@ from PyQt6.QtCore import QRect
 
 from PyQt6.QtGui import QImage
 
+from PIL import Image
+
 from dataclasses import dataclass, field
 from pathlib import Path
-from math import ceil
+from math import ceil, sqrt
 
 
 class SpriteSheet:
@@ -175,3 +177,45 @@ class AnimationData:
             if len(self.sound_effects_at_frames) > 0:
                 for frame_num in self.frame_delays.keys():
                     f.write("sfx {} {}\n".format(frame_num, self.sound_effects_at_frames[frame_num]))
+
+
+def convert_to_spritesheet(input_file: Path):
+    """Converts a single .gif or .webp file to a .png spritesheet and animation data"""
+    if input_file.suffix not in [".gif", ".webp"]:
+        raise ValueError("Input file must be a .gif file or a .webp file")
+
+    anim_data = AnimationData()
+
+    with Image.open(input_file) as im:
+        num_frames = im.n_frames
+        frame_width = im.width
+        frame_height = im.height
+
+        num_frames_in_row = round(sqrt(num_frames))
+        num_rows = ceil(num_frames / num_frames_in_row)
+
+        anim_data.num_images = num_frames
+        anim_data.horizontal_splits = num_frames_in_row
+        anim_data.vertical_splits = num_rows
+        # loop = 0 means that it will loop infinitely (meaning num_loops must be 1 in this case)
+        anim_data.num_loops = int(im.info["loop"] == 0) if "loop" in im.info.keys() else 0
+
+        resulting_image = Image.new("RGBA", (frame_width * num_frames_in_row, frame_height * num_rows))
+
+        row = 0
+        col = 0
+
+        for idx in range(num_frames):
+            im.seek(idx)
+            if "duration" in im.info.keys():
+                anim_data.frame_delays[idx] = im.info["duration"] // 60
+
+            resulting_image.paste(im, (col * frame_width, row * frame_height))
+
+            col += 1
+            if col >= num_frames_in_row:
+                col = 0
+                row += 1
+
+        resulting_image.save(input_file.with_suffix(".png"))
+        anim_data.write_to_file(input_file.with_suffix(".txt"))
