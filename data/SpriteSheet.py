@@ -158,11 +158,7 @@ class AnimationData:
             return result
 
     def write_to_file(self, filepath: Path):
-        file_text = """horizontal {}\n
-                    vertical {}\n
-                    length {}\n
-                    loops {}\n
-                    """.format(self.horizontal_splits, self.vertical_splits, self.num_images, self.num_loops)
+        file_text = "horizontal {}\nvertical {}\nlength {}\nloops {}\n".format(self.horizontal_splits, self.vertical_splits, self.num_images, self.num_loops)
 
         with open(filepath, 'w') as f:
             f.write(file_text)
